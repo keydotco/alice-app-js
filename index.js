@@ -1,1 +1,3 @@
-console.log('Hello, world.')
+exports.helloWorld = function() {
+	return 'Hello, world.'
+}

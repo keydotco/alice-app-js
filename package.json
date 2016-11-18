@@ -1,0 +1,23 @@
+{
+  "name": "alice-app",
+  "version": "0.0.1",
+  "description": "JS wrapper for Alice App API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keydotco/alice-app-js.git"
+  },
+  "keywords": [
+    "alice",
+    "concierge"
+  ],
+  "author": "KEY Concierge Dev Team",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/keydotco/alice-app-js/issues"
+  },
+  "homepage": "https://github.com/keydotco/alice-app-js#readme"
+}

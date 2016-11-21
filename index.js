@@ -1,3 +1,1 @@
-exports.helloWorld = function() {
-	return 'Hello, world.'
-}
+module.exports = require("./lib/alice");

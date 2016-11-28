@@ -1,7 +1,7 @@
 {
   "name": "alice-app",
   "version": "0.0.1",
-  "description": "JS wrapper for Alice App API",
+  "description": "JS wrapper for the Alice App API",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"

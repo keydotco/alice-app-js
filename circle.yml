@@ -4,3 +4,5 @@ machine:
 deployment:
   npm:
     branch: master
+    commands:
+      - npm publish

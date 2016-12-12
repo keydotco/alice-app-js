@@ -354,6 +354,11 @@ describe('Testing Exports', function() {
                 }).should.be.fulfilled;
             })
         })
+        describe('Update Ticket Status', function() {
+            it('Should Update Ticket Status"', function() {
+                return alice.tickets('updateStatus', { hotelId: '1', status: 'Closed' }).should.be.fulfilled;
+            });
+        })
         describe('Search Tickets', function() {
             beforeEach(function() {
                 var searchResponse = [{

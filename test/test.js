@@ -19,6 +19,179 @@ describe('Testing Exports', function() {
     it('Should initiate alice with the authKey', function() {
         expect(alice.auth).to.equal("Basic 78910")
     })
+
+    describe('Testing Services', function() {
+        describe('Get Statuses', function() {
+            beforeEach(function() {
+                var getResponse = [{
+                    "id": 15928,
+                    "name": "Delivery- Misc",
+                    "options": [
+                      {
+                        "id": 47510,
+                        "name": "Alternate Label",
+                        "dataType": "Text",
+                        "required": false
+                      },
+                      {
+                        "id": 47511,
+                        "name": "Delivery Date and Time",
+                        "dataType": "DateTime",
+                        "required": true
+                      },
+                      {
+                        "id": 47512,
+                        "name": "Delivery Location",
+                        "dataType": "Text",
+                        "required": false
+                      },
+                      {
+                        "id": 47514,
+                        "name": "Items to be delivered",
+                        "dataType": "Text",
+                        "required": false
+                      },
+                      {
+                        "id": 47516,
+                        "name": "Note rom Concierge",
+                        "dataType": "Text",
+                        "required": false
+                      },
+                      {
+                        "id": 47513,
+                        "name": "Pickup Date and Time",
+                        "dataType": "DateTime",
+                        "required": false
+                      },
+                      {
+                        "id": 47515,
+                        "name": "Vendor",
+                        "dataType": "Contact",
+                        "required": false
+                      }
+                    ]
+                  },
+                  {
+                    "id": 10912,
+                    "name": "Bike Rental",
+                    "options": [
+                      {
+                        "id": 40806,
+                        "name": "Alternate Label",
+                        "dataType": "Text",
+                        "required": false
+                      },
+                      {
+                        "id": 40962,
+                        "name": "Pick up Date and Time",
+                        "dataType": "DateTime",
+                        "required": true
+                      },
+                      {
+                        "id": 40964,
+                        "name": "Drop off Date and Time",
+                        "dataType": "DateTime",
+                        "required": true
+                      },
+                      {
+                        "id": 33886,
+                        "name": "Type of Bike",
+                        "dataType": "Text",
+                        "required": false
+                      },
+                      {
+                        "id": 30642,
+                        "name": "Number of Bikes",
+                        "dataType": "Number",
+                        "required": true
+                      },
+                      {
+                        "id": 40967,
+                        "name": "Vendor",
+                        "dataType": "Contact",
+                        "required": false
+                      },
+                      {
+                        "id": 40968,
+                        "name": "Note from Concierge",
+                        "dataType": "Text",
+                        "required": false
+                      }
+                    ]
+                }];
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/facilities/3810/services?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('Should get the services', function() {
+                return alice.services('get', { hotelId: '1', facilityId: '3810' }).should.be.fulfilled;
+            })
+            it('Should require a hotel ID', function() {
+                return alice.services('get', {}).should.be.rejected;
+             })
+        })
+    });
+
+    describe('Testing WorkflowStatuses', function() {
+        describe('Get Statuses', function() {
+            beforeEach(function() {
+                var getResponse = [{
+                    "id": 301,
+                    "name": "Transferred",
+                    "abbreviation": "TRANS"
+                  },
+                  {
+                    "id": 824,
+                    "name": "Creation",
+                    "abbreviation": "CREA"
+                  },
+                  {
+                    "id": 300,
+                    "name": "Requested",
+                    "abbreviation": "REQ"
+                  },
+                  {
+                    "id": 303,
+                    "name": "In Progress",
+                    "abbreviation": "WORK"
+                  },
+                  {
+                    "id": 302,
+                    "name": "Accepted",
+                    "abbreviation": "ACCPT"
+                  },
+                  {
+                    "id": 304,
+                    "name": "Closed",
+                    "abbreviation": "DONE"
+                  },
+                  {
+                    "id": 306,
+                    "name": "Expired",
+                    "abbreviation": "EXP"
+                  },
+                  {
+                    "id": 305,
+                    "name": "declined",
+                    "abbreviation": "DEC"
+                  }
+                ];
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/workflowStatuses?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('Should get all statuses for a given hotelId', function() {
+                return alice.workflowStatuses('get', { hotelId: '1'}).should.be.fulfilled;
+            })
+            it('Should require a hotel ID', function() {
+                return alice.workflowStatuses('get', {}).should.be.rejected;
+            })
+            it('Should have all required statuses', function() {
+                return alice.workflowStatuses('get', { hotelId: '1'}).should.eventually.have.lengthOf(8);
+            })
+        })
+    });
+
     describe('Testing Tickets', function() {
         describe('Get Ticket', function() {
             beforeEach(function() {

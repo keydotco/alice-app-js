@@ -19,6 +19,40 @@ describe('Testing Exports', function() {
     it('Should initiate alice with the authKey', function() {
         expect(alice.auth).to.equal("Basic 78910")
     })
+    describe('Testing Services', function() {
+        describe('Get Services', function() {
+            beforeEach(function() {
+                let getResponse = [{
+                    "id": 0,
+                    "information": "string",
+                    "name": "string",
+                    "options": [{
+                        "dataType": "Text",
+                        "group": "string",
+                        "id": 0,
+                        "name": "string",
+                        "required": true,
+                        "values": [
+                            "string"
+                        ]
+                    }],
+                    "price": 0
+                }];
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/facilities/2/services?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('Should require a hotel ID', function() {
+                return alice.services('get', { facilityId: '2' }).should.be.rejected;
+            })
+            it('Should require a facility ID', function() {
+                return alice.services('get', { hotelId: '1' }).should.be.rejected;
+            })
+            it('Should get the services for a facility', function() {
+                return alice.services('get', { hotelId: '1', facilityId: '2' })
+            })
+        })
+    })
     describe('Testing Tickets', function() {
         describe('Get Ticket', function() {
             beforeEach(function() {
@@ -118,6 +152,12 @@ describe('Testing Exports', function() {
                     .get('/hotels/1/tickets/0?apikey=123456')
                     .reply(200, getResponse);
             })
+            it('Should require a hotelId', function() {
+                return alice.tickets('get', { ticketId: '0' }).should.be.rejected;
+            })
+            it('Should require a ticketId', function() {
+                return alice.tickets('get', { hotelId: '1' }).should.be.rejected;
+            })
             it('Should get a ticket', function() {
                 return alice.tickets('get', { hotelId: '1', ticketId: '0' }).should.be.fulfilled;
             })
@@ -177,6 +217,41 @@ describe('Testing Exports', function() {
                         "reservation": 0,
                         "roomNumber": "string",
                         "serviceId": "102"
+                    }
+                }).should.be.fulfilled;
+            })
+        })
+        describe('Update Ticket', function() {
+            beforeEach(function() {
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .put('/hotels/1/tickets/2/serviceRequest?apikey=123456')
+                    .reply(204, "success");
+            })
+            it('Should require a hotel ID', function() {
+                return alice.tickets('create', {
+                    ticketId: '2',
+                    request: {
+                        "info": "string",
+                        "options": [{
+                            "id": "222",
+                            "value": "2020-03-03T12:30:00.000Z"
+                        }]
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a request', function() {
+                return alice.tickets('create', { hotelId: '1', ticketId: '2' }).should.be.rejected;
+            })
+            it('Should update a service request', function() {
+                return alice.tickets('update', {
+                    hotelId: '1',
+                    ticketId: '2',
+                    request: {
+                        "info": "string",
+                        "options": [{
+                            "id": "222",
+                            "value": "2020-03-03T12:30:00.000Z"
+                        }]
                     }
                 }).should.be.fulfilled;
             })
@@ -278,6 +353,9 @@ describe('Testing Exports', function() {
                 nock('http://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/tickets?ticketTypes=ServiceRequest&apikey=123456')
                     .reply(200, searchResponse);
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/tickets?query=airport&ticketTypes=ServiceRequest&apikey=123456')
+                    .reply(200, searchResponse);
             });
             it('Should require hotelId',
                 function() {
@@ -285,6 +363,9 @@ describe('Testing Exports', function() {
                 });
             it('Should search tickets"', function() {
                 return alice.tickets('search', { hotelId: '1', ticketTypes: 'ServiceRequest' }).should.be.fulfilled;
+            });
+            it('Should loop through multiple params"', function() {
+                return alice.tickets('search', { hotelId: '1', query: "airport", ticketTypes: 'ServiceRequest' }).should.be.fulfilled;
             });
         })
     });

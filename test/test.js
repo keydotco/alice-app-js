@@ -228,7 +228,7 @@ describe('Testing Exports', function() {
                     .reply(204, "success");
             })
             it('Should require a hotel ID', function() {
-                return alice.tickets('create', {
+                return alice.tickets('update', {
                     ticketId: '2',
                     request: {
                         "info": "string",
@@ -240,7 +240,7 @@ describe('Testing Exports', function() {
                 }).should.be.rejected;
             })
             it('Should require a request', function() {
-                return alice.tickets('create', { hotelId: '1', ticketId: '2' }).should.be.rejected;
+                return alice.tickets('update', { hotelId: '1', ticketId: '2' }).should.be.rejected;
             })
             it('Should update a service request', function() {
                 return alice.tickets('update', {
@@ -252,6 +252,33 @@ describe('Testing Exports', function() {
                             "id": "222",
                             "value": "2020-03-03T12:30:00.000Z"
                         }]
+                    }
+                }).should.be.fulfilled;
+            })
+        })
+        describe('Update Status', function() {
+            beforeEach(function() {
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .put('/hotels/1/tickets/2/workflowStatus?apikey=123456')
+                    .reply(204, "success");
+            })
+            it('Should require a hotel ID', function() {
+                return alice.tickets('status', {
+                    ticketId: '2',
+                    request: {
+                        "workflowStatusId": 0
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a request', function() {
+                return alice.tickets('status', { hotelId: '1', ticketId: '2' }).should.be.rejected;
+            })
+            it('Should update a workflow status', function() {
+                return alice.tickets('status', {
+                    hotelId: '1',
+                    ticketId: '2',
+                    request: {
+                        "workflowStatusId": 0
                     }
                 }).should.be.fulfilled;
             })

@@ -9,7 +9,7 @@ A node.js wrapper for the [Alice App API](http://developer.aliceapp.com/).
 
 
 ## Installation
-`npm install alice`
+`npm install alice-app`
 
 ##Usage
 ### Initialization

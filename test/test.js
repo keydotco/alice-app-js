@@ -6,7 +6,16 @@ var expect = chai.expect;
 var nock = require('nock');
 chai.should()
 chai.use(chaiAsPromised);
-
+describe('Testing Initialization Failure', function() {
+    it('Should require an API Key', function() {
+        let alice = new Alice(undefined, 78910)
+        expect(alice).to.be.an.instanceof(Error);
+    })
+    it('Should require an Authorization Key', function() {
+        let alice = new Alice(123456, undefined)
+        expect(alice).to.be.an.instanceof(Error);
+    })
+})
 describe('Testing Exports', function() {
     beforeEach(function() {
         var apiKey = 123456;
@@ -19,119 +28,6 @@ describe('Testing Exports', function() {
     it('Should initiate alice with the authKey', function() {
         expect(alice.auth).to.equal("Basic 78910")
     })
-
-    describe('Testing Services', function() {
-        describe('Get Statuses', function() {
-            beforeEach(function() {
-                var getResponse = [{
-                    "id": 15928,
-                    "name": "Delivery- Misc",
-                    "options": [
-                      {
-                        "id": 47510,
-                        "name": "Alternate Label",
-                        "dataType": "Text",
-                        "required": false
-                      },
-                      {
-                        "id": 47511,
-                        "name": "Delivery Date and Time",
-                        "dataType": "DateTime",
-                        "required": true
-                      },
-                      {
-                        "id": 47512,
-                        "name": "Delivery Location",
-                        "dataType": "Text",
-                        "required": false
-                      },
-                      {
-                        "id": 47514,
-                        "name": "Items to be delivered",
-                        "dataType": "Text",
-                        "required": false
-                      },
-                      {
-                        "id": 47516,
-                        "name": "Note rom Concierge",
-                        "dataType": "Text",
-                        "required": false
-                      },
-                      {
-                        "id": 47513,
-                        "name": "Pickup Date and Time",
-                        "dataType": "DateTime",
-                        "required": false
-                      },
-                      {
-                        "id": 47515,
-                        "name": "Vendor",
-                        "dataType": "Contact",
-                        "required": false
-                      }
-                    ]
-                  },
-                  {
-                    "id": 10912,
-                    "name": "Bike Rental",
-                    "options": [
-                      {
-                        "id": 40806,
-                        "name": "Alternate Label",
-                        "dataType": "Text",
-                        "required": false
-                      },
-                      {
-                        "id": 40962,
-                        "name": "Pick up Date and Time",
-                        "dataType": "DateTime",
-                        "required": true
-                      },
-                      {
-                        "id": 40964,
-                        "name": "Drop off Date and Time",
-                        "dataType": "DateTime",
-                        "required": true
-                      },
-                      {
-                        "id": 33886,
-                        "name": "Type of Bike",
-                        "dataType": "Text",
-                        "required": false
-                      },
-                      {
-                        "id": 30642,
-                        "name": "Number of Bikes",
-                        "dataType": "Number",
-                        "required": true
-                      },
-                      {
-                        "id": 40967,
-                        "name": "Vendor",
-                        "dataType": "Contact",
-                        "required": false
-                      },
-                      {
-                        "id": 40968,
-                        "name": "Note from Concierge",
-                        "dataType": "Text",
-                        "required": false
-                      }
-                    ]
-                }];
-                nock('http://rest.aliceapp.com/staff/v1')
-                    .get('/hotels/1/facilities/3810/services?apikey=123456')
-                    .reply(200, getResponse);
-            })
-            it('Should get the services', function() {
-                return alice.services('get', { hotelId: '1', facilityId: '3810' }).should.be.fulfilled;
-            })
-            it('Should require a hotel ID', function() {
-                return alice.services('get', {}).should.be.rejected;
-             })
-        })
-    });
-
     describe('Testing WorkflowStatuses', function() {
         describe('Get Statuses', function() {
             beforeEach(function() {
@@ -139,62 +35,87 @@ describe('Testing Exports', function() {
                     "id": 301,
                     "name": "Transferred",
                     "abbreviation": "TRANS"
-                  },
-                  {
+                }, {
                     "id": 824,
                     "name": "Creation",
                     "abbreviation": "CREA"
-                  },
-                  {
+                }, {
                     "id": 300,
                     "name": "Requested",
                     "abbreviation": "REQ"
-                  },
-                  {
+                }, {
                     "id": 303,
                     "name": "In Progress",
                     "abbreviation": "WORK"
-                  },
-                  {
+                }, {
                     "id": 302,
                     "name": "Accepted",
                     "abbreviation": "ACCPT"
-                  },
-                  {
+                }, {
                     "id": 304,
                     "name": "Closed",
                     "abbreviation": "DONE"
-                  },
-                  {
+                }, {
                     "id": 306,
                     "name": "Expired",
                     "abbreviation": "EXP"
-                  },
-                  {
+                }, {
                     "id": 305,
                     "name": "declined",
                     "abbreviation": "DEC"
-                  }
-                ];
+                }];
                 nock('http://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/workflowStatuses?apikey=123456')
                     .reply(200, getResponse);
             })
             it('Should get all statuses for a given hotelId', function() {
-                return alice.workflowStatuses('getAll', { hotelId: '1'}).should.be.fulfilled;
+                return alice.workflowStatuses('getAll', { hotelId: '1' }).should.be.fulfilled;
             })
             it('Should require a hotel ID', function() {
                 return alice.workflowStatuses('getAll', {}).should.be.rejected;
             })
             it('Should have all required statuses', function() {
-                return alice.workflowStatuses('getAll', { hotelId: '1'}).should.eventually.have.lengthOf(8);
+                return alice.workflowStatuses('getAll', { hotelId: '1' }).should.eventually.have.lengthOf(8);
             })
             it('Should get id of status', function() {
-                return alice.workflowStatuses('getId', { hotelId: '1', status: 'Expired'}).should.eventually.equal(306);
+                return alice.workflowStatuses('getId', { hotelId: '1', status: 'Expired' }).should.eventually.equal(306);
             })
         })
     });
-
+    describe('Testing Services', function() {
+        describe('Get Services', function() {
+            beforeEach(function() {
+                let getResponse = [{
+                    "id": 0,
+                    "information": "string",
+                    "name": "string",
+                    "options": [{
+                        "dataType": "Text",
+                        "group": "string",
+                        "id": 0,
+                        "name": "string",
+                        "required": true,
+                        "values": [
+                            "string"
+                        ]
+                    }],
+                    "price": 0
+                }];
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/facilities/2/services?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('Should require a hotel ID', function() {
+                return alice.services('get', { facilityId: '2' }).should.be.rejected;
+            })
+            it('Should require a facility ID', function() {
+                return alice.services('get', { hotelId: '1' }).should.be.rejected;
+            })
+            it('Should get the services for a facility', function() {
+                return alice.services('get', { hotelId: '1', facilityId: '2' })
+            })
+        })
+    })
     describe('Testing Tickets', function() {
         describe('Get Ticket', function() {
             beforeEach(function() {
@@ -294,6 +215,12 @@ describe('Testing Exports', function() {
                     .get('/hotels/1/tickets/0?apikey=123456')
                     .reply(200, getResponse);
             })
+            it('Should require a hotelId', function() {
+                return alice.tickets('get', { ticketId: '0' }).should.be.rejected;
+            })
+            it('Should require a ticketId', function() {
+                return alice.tickets('get', { hotelId: '1' }).should.be.rejected;
+            })
             it('Should get a ticket', function() {
                 return alice.tickets('get', { hotelId: '1', ticketId: '0' }).should.be.fulfilled;
             })
@@ -357,25 +284,88 @@ describe('Testing Exports', function() {
                 }).should.be.fulfilled;
             })
         })
-        // describe('Update Ticket Status', function() {
-        //     var getResponse = [{
-        //             "id": 304,
-        //             "name": "Closed",
-        //             "abbreviation": "DONE"
-        //           },
-        //           {
-        //             "id": 305,
-        //             "name": "declined",
-        //             "abbreviation": "DEC"
-        //           }
-        //         ];
-        //         nock('http://rest.aliceapp.com/staff/v1')
-        //             .get('/hotels/1/workflowStatuses?apikey=123456')
-        //             .reply(200, getResponse);
-        //     it('Should Update Ticket Status"', function() {
-        //         return alice.tickets('updateStatus', { hotelId: '1', status: 'Closed' }).should.be.fulfilled;
-        //     });
-        // })
+        describe('Update Ticket', function() {
+            beforeEach(function() {
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .put('/hotels/1/tickets/2/serviceRequest?apikey=123456')
+                    .reply(204, "success");
+            })
+            it('Should require a hotel ID', function() {
+                return alice.tickets('update', {
+                    ticketId: '2',
+                    request: {
+                        "info": "string",
+                        "options": [{
+                            "id": "222",
+                            "value": "2020-03-03T12:30:00.000Z"
+                        }]
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a ticket ID', function() {
+                return alice.tickets('update', {
+                    hotelId: '1',
+                    request: {
+                        "info": "string",
+                        "options": [{
+                            "id": "222",
+                            "value": "2020-03-03T12:30:00.000Z"
+                        }]
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a request', function() {
+                return alice.tickets('update', { hotelId: '1', ticketId: '2' }).should.be.rejected;
+            })
+            it('Should update a service request', function() {
+                return alice.tickets('update', {
+                    hotelId: '1',
+                    ticketId: '2',
+                    request: {
+                        "info": "string",
+                        "options": [{
+                            "id": "222",
+                            "value": "2020-03-03T12:30:00.000Z"
+                        }]
+                    }
+                }).should.be.fulfilled;
+            })
+        })
+        describe('Update Status', function() {
+            beforeEach(function() {
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .put('/hotels/1/tickets/2/workflowStatus?apikey=123456')
+                    .reply(204, "success");
+            })
+            it('Should require a hotel ID', function() {
+                return alice.tickets('status', {
+                    ticketId: '2',
+                    request: {
+                        "workflowStatusId": 0
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a ticket ID', function() {
+                return alice.tickets('status', {
+                    hotelId: '1',
+                    request: {
+                        "workflowStatusId": 0
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a request', function() {
+                return alice.tickets('status', { hotelId: '1', ticketId: '2' }).should.be.rejected;
+            })
+            it('Should update a workflow status', function() {
+                return alice.tickets('status', {
+                    hotelId: '1',
+                    ticketId: '2',
+                    request: {
+                        "workflowStatusId": 0
+                    }
+                }).should.be.fulfilled;
+            })
+        })
         describe('Search Tickets', function() {
             beforeEach(function() {
                 var searchResponse = [{
@@ -473,6 +463,9 @@ describe('Testing Exports', function() {
                 nock('http://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/tickets?ticketTypes=ServiceRequest&apikey=123456')
                     .reply(200, searchResponse);
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/tickets?query=airport&ticketTypes=ServiceRequest&apikey=123456')
+                    .reply(200, searchResponse);
             });
             it('Should require hotelId',
                 function() {
@@ -480,6 +473,9 @@ describe('Testing Exports', function() {
                 });
             it('Should search tickets"', function() {
                 return alice.tickets('search', { hotelId: '1', ticketTypes: 'ServiceRequest' }).should.be.fulfilled;
+            });
+            it('Should loop through multiple params"', function() {
+                return alice.tickets('search', { hotelId: '1', query: "airport", ticketTypes: 'ServiceRequest' }).should.be.fulfilled;
             });
         })
     });

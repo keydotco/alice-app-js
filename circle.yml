@@ -1,8 +1,8 @@
 machine:
   node:
     version: 6.9.0
-deployment:
-  npm:
-    branch: master
-    commands:
-      - npm publish
+# deployment:
+#   npm:
+#     branch: master
+#     commands:
+#       - npm publish

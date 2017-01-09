@@ -1,6 +1,6 @@
 {
   "name": "alice-app",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "JS wrapper for the Alice App API",
   "main": "index.js",
   "scripts": {

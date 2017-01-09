@@ -6,7 +6,16 @@ var expect = chai.expect;
 var nock = require('nock');
 chai.should()
 chai.use(chaiAsPromised);
-
+describe('Testing Initialization Failure', function() {
+    it('Should require an API Key', function() {
+        let alice = new Alice(undefined, 78910)
+        expect(alice).to.be.an.instanceof(Error);
+    })
+    it('Should require an Authorization Key', function() {
+        let alice = new Alice(123456, undefined)
+        expect(alice).to.be.an.instanceof(Error);
+    })
+})
 describe('Testing Exports', function() {
     beforeEach(function() {
         var apiKey = 123456;
@@ -19,6 +28,60 @@ describe('Testing Exports', function() {
     it('Should initiate alice with the authKey', function() {
         expect(alice.auth).to.equal("Basic 78910")
     })
+    describe('Testing WorkflowStatuses', function() {
+        describe('Get Statuses', function() {
+            beforeEach(function() {
+                var getResponse = [{
+                    "id": 301,
+                    "name": "Transferred",
+                    "abbreviation": "TRANS"
+                }, {
+                    "id": 824,
+                    "name": "Creation",
+                    "abbreviation": "CREA"
+                }, {
+                    "id": 300,
+                    "name": "Requested",
+                    "abbreviation": "REQ"
+                }, {
+                    "id": 303,
+                    "name": "In Progress",
+                    "abbreviation": "WORK"
+                }, {
+                    "id": 302,
+                    "name": "Accepted",
+                    "abbreviation": "ACCPT"
+                }, {
+                    "id": 304,
+                    "name": "Closed",
+                    "abbreviation": "DONE"
+                }, {
+                    "id": 306,
+                    "name": "Expired",
+                    "abbreviation": "EXP"
+                }, {
+                    "id": 305,
+                    "name": "declined",
+                    "abbreviation": "DEC"
+                }];
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/workflowStatuses?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('Should get all statuses for a given hotelId', function() {
+                return alice.workflowStatuses('getAll', { hotelId: '1' }).should.be.fulfilled;
+            })
+            it('Should require a hotel ID', function() {
+                return alice.workflowStatuses('getAll', {}).should.be.rejected;
+            })
+            it('Should have all required statuses', function() {
+                return alice.workflowStatuses('getAll', { hotelId: '1' }).should.eventually.have.lengthOf(8);
+            })
+            it('Should get id of status', function() {
+                return alice.workflowStatuses('getId', { hotelId: '1', status: 'Expired' }).should.eventually.equal(306);
+            })
+        })
+    });
     describe('Testing Services', function() {
         describe('Get Services', function() {
             beforeEach(function() {
@@ -239,6 +302,18 @@ describe('Testing Exports', function() {
                     }
                 }).should.be.rejected;
             })
+            it('Should require a ticket ID', function() {
+                return alice.tickets('update', {
+                    hotelId: '1',
+                    request: {
+                        "info": "string",
+                        "options": [{
+                            "id": "222",
+                            "value": "2020-03-03T12:30:00.000Z"
+                        }]
+                    }
+                }).should.be.rejected;
+            })
             it('Should require a request', function() {
                 return alice.tickets('update', { hotelId: '1', ticketId: '2' }).should.be.rejected;
             })
@@ -265,6 +340,14 @@ describe('Testing Exports', function() {
             it('Should require a hotel ID', function() {
                 return alice.tickets('status', {
                     ticketId: '2',
+                    request: {
+                        "workflowStatusId": 0
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a ticket ID', function() {
+                return alice.tickets('status', {
+                    hotelId: '1',
                     request: {
                         "workflowStatusId": 0
                     }

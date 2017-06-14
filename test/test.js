@@ -82,6 +82,62 @@ describe('Testing Exports', function() {
             })
         })
     });
+    describe('Testing Events', function() {
+        describe('get events by Hotel Group', function() {
+            beforeEach(function() {
+                let getResponse = {
+                    "websocketUrl": "wss://www.aliceapp.com/555",
+                    "longPollingUrl": "https://www.aliceapp.com/555"
+                };
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotelGroups/40/events?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('getShould require a hotel group id', function() {
+                return alice.events('getByHotelGroup', { hotelId: '1' }).should.be.rejected;
+            })
+            it('getByHotelGroup Should get the urls for the Hotel Group event streams', function() {
+                return alice.events('getByHotelGroup', { groupId: '40' })
+            })
+        })
+        describe('get events by Hotel', function() {
+            beforeEach(function() {
+                let getResponse = {
+                    "websocketUrl": "wss://www.aliceapp.com/555",
+                    "longPollingUrl": "https://www.aliceapp.com/555"
+                };
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/202/events?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('getByHotel Should require a hotel id', function() {
+                return alice.events('getByHotel', { groupId: '1' }).should.be.rejected;
+            })
+            it('getByHotel Should get the urls for the Hotel event streams', function() {
+                return alice.events('getByHotel', { hotelId: '202' })
+            })
+        })
+        describe('get events by Reservation', function() {
+            beforeEach(function() {
+                let getResponse = {
+                    "websocketUrl": "wss://www.aliceapp.com/555",
+                    "longPollingUrl": "https://www.aliceapp.com/555"
+                };
+                nock('http://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/202/reservations/xxx-ggg-xxx/events?apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('getByReservation Should require a hotel id', function() {
+                return alice.events('getByReservation', { groupId: '1' , uuid:'xxx-ggg-xxx'}).should.be.rejected;
+            })
+            it('getByReservation Should require a UUID', function() {
+                return alice.events('getByReservation', { hotelId: '202' }).should.be.rejected;
+            })
+            it('getByReservation Should get the urls for the Hotel event streams', function() {
+                return alice.events('getByReservation', { hotelId: '202', uuid: 'xxx-ggg-xxx' })
+            })
+        })
+    });
     describe('Testing Services', function() {
         describe('Get Services', function() {
             beforeEach(function() {

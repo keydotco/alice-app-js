@@ -65,7 +65,7 @@ describe('Testing Exports', function() {
                     "abbreviation": "DEC"
                 }];
                 nock('http://rest.aliceapp.com/staff/v1')
-                    .get('/hotels/1/workflowStatuses?apikey=123456')
+                    .get('/hotels/1/workflowStates?apikey=123456')
                     .reply(200, getResponse);
             })
             it('Should get all statuses for a given hotelId', function() {
@@ -334,7 +334,7 @@ describe('Testing Exports', function() {
         describe('Update Status', function() {
             beforeEach(function() {
                 nock('http://rest.aliceapp.com/staff/v1')
-                    .put('/hotels/1/tickets/2/workflowStatus?apikey=123456')
+                    .put('/hotels/1/tickets/2/workflowState?apikey=123456')
                     .reply(204, "success");
             })
             it('Should require a hotel ID', function() {

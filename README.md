@@ -12,11 +12,18 @@ A node.js wrapper for the [Alice App API](http://developer.aliceapp.com/).
 `npm install alice-app`
 
 ##Usage
-### Initialization
+### Standard Initialization (defaults to `https://rest.aliceapp.com`)
 ```javascript
 var Alice = require('alice-app');
 alice = new Alice('YOUR API KEY', 'YOUR AUTHENTICATION KEY');
 ```
+
+### Standard Initialization with alternate API URL
+```javascript
+var Alice = require('alice-app');
+alice = new Alice('YOUR API KEY', 'YOUR AUTHENTICATION KEY', 'ALTERNATE API URL');
+```
+
 ### Tickets
 #### Get
 Request:

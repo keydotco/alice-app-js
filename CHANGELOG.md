@@ -1,3 +1,9 @@
+## 0.0.8 (2017-06-16)
+
+Updates:
+
+  - added alternate URL support
+
 ## 0.0.6 (2017-03-03)
 
 Updates:

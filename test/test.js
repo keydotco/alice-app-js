@@ -16,6 +16,16 @@ describe('Testing Initialization Failure', function() {
         expect(alice).to.be.an.instanceof(Error);
     })
 })
+describe('Testing default and alternate API URLs', function() {
+    it('Should default to rest.aliceapp.com', function() {
+        let alice = new Alice(123456, 78910)
+        expect(alice.apiURL).to.equal("rest.aliceapp.com")
+    })
+    it('Should allow replacing the url', function() {
+        let alice = new Alice(123456, 78910, "rapi.aliceapp.com")
+        expect(alice.apiURL).to.equal("rapi.aliceapp.com")
+    })
+})
 describe('Testing Exports', function() {
     beforeEach(function() {
         var apiKey = 123456;
@@ -64,7 +74,7 @@ describe('Testing Exports', function() {
                     "name": "declined",
                     "abbreviation": "DEC"
                 }];
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/workflowStates?apikey=123456')
                     .reply(200, getResponse);
             })
@@ -89,7 +99,7 @@ describe('Testing Exports', function() {
                     "websocketUrl": "wss://www.aliceapp.com/555",
                     "longPollingUrl": "https://www.aliceapp.com/555"
                 };
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotelGroups/40/events?apikey=123456')
                     .reply(200, getResponse);
             })
@@ -106,7 +116,7 @@ describe('Testing Exports', function() {
                     "websocketUrl": "wss://www.aliceapp.com/555",
                     "longPollingUrl": "https://www.aliceapp.com/555"
                 };
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotels/202/events?apikey=123456')
                     .reply(200, getResponse);
             })
@@ -123,7 +133,7 @@ describe('Testing Exports', function() {
                     "websocketUrl": "wss://www.aliceapp.com/555",
                     "longPollingUrl": "https://www.aliceapp.com/555"
                 };
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotels/202/reservations/xxx-ggg-xxx/events?apikey=123456')
                     .reply(200, getResponse);
             })
@@ -157,7 +167,7 @@ describe('Testing Exports', function() {
                     }],
                     "price": 0
                 }];
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/facilities/2/services?apikey=123456')
                     .reply(200, getResponse);
             })
@@ -267,7 +277,7 @@ describe('Testing Exports', function() {
                         "name": "string"
                     }
                 };
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/tickets/0?apikey=123456')
                     .reply(200, getResponse);
             })
@@ -295,7 +305,7 @@ describe('Testing Exports', function() {
                 var createResponse = {
                     id: 0
                 };
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .post('/hotels/1/tickets/serviceRequest?apikey=123456')
                     .reply(200, createResponse);
             })
@@ -342,7 +352,7 @@ describe('Testing Exports', function() {
         })
         describe('Update Ticket', function() {
             beforeEach(function() {
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .put('/hotels/1/tickets/2/serviceRequest?apikey=123456')
                     .reply(204, "success");
             })
@@ -389,7 +399,7 @@ describe('Testing Exports', function() {
         })
         describe('Update Status', function() {
             beforeEach(function() {
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .put('/hotels/1/tickets/2/workflowState?apikey=123456')
                     .reply(204, "success");
             })
@@ -516,10 +526,10 @@ describe('Testing Exports', function() {
                         "name": "string"
                     }
                 }];
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/tickets?ticketTypes=ServiceRequest&apikey=123456')
                     .reply(200, searchResponse);
-                nock('http://rest.aliceapp.com/staff/v1')
+                nock('https://rest.aliceapp.com/staff/v1')
                     .get('/hotels/1/tickets?query=airport&ticketTypes=ServiceRequest&apikey=123456')
                     .reply(200, searchResponse);
             });

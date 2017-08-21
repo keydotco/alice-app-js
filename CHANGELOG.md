@@ -1,3 +1,10 @@
+## 0.0.9 (2017-08-21)
+
+Updates:
+
+  - Add support for reservations
+  - updated testing deps
+
 ## 0.0.8 (2017-06-16)
 
 Updates:

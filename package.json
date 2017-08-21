@@ -1,6 +1,6 @@
 {
   "name": "alice-app",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "JS wrapper for the Alice App API",
   "main": "index.js",
   "scripts": {
@@ -21,12 +21,12 @@
   },
   "homepage": "https://github.com/keydotco/alice-app-js#readme",
   "devDependencies": {
-    "chai": "3.5.0",
-    "chai-as-promised": "6.0.0",
+    "chai": "4.1.1",
+    "chai-as-promised": "7.1.1",
     "chai-http": "3.0.0",
     "istanbul": "0.4.5",
-    "mocha": "3.2.0",
-    "nock": "9.0.9"
+    "mocha": "3.5.0",
+    "nock": "9.0.14"
   },
   "dependencies": {
     "node-fetch": "1.6.3"

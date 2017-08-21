@@ -148,6 +148,169 @@ describe('Testing Exports', function() {
             })
         })
     });
+    describe('Testing Reservations', function() {
+        describe('Create Reservation', function() {
+            beforeEach(function(){
+                let createResponse = {
+                    "address": "string",
+                    "email": "string",
+                    "end": "2017-08-21T19:13:44.694Z",
+                    "firstname": "string",
+                    "id": 0,
+                    "language": "string",
+                    "lastname": "string",
+                    "lateCheckoutTime": "2017-08-21T19:13:44.694Z",
+                    "notes": "string",
+                    "phone": "string",
+                    "prefix": "string",
+                    "reservationNumber": "string",
+                    "roomNumber": "string",
+                    "start": "2017-08-21T19:13:44.694Z",
+                    "status": "New",
+                    "uuid": "string",
+                    "vip": "string"
+                }
+                nock('https://rest.aliceapp.com/staff/v1')
+                    .post('/hotels/1/reservations?apikey=123456')
+                    .reply(200, createResponse);
+            })
+            it('Should require a hotel ID', function() {
+                return alice.reservations('create', { request: {
+                    "email": "john@doe.com",
+                    "end": "2017-09-01T05:00:00.000Z",
+                    "firstname": "John",
+                    "lastname": "Doe",
+                    "reservationNumber": "reservation",
+                    "start": "2017-08-25T05:00:00.000Z",
+                    "status": "New"
+                    }
+                }).should.be.rejected;
+            })
+            it('Should require a request', function() {
+                return alice.reservations('create', { hotelId: '1' }).should.be.rejected;
+            })
+            it('Should create a reservation', function() {
+                return alice.reservations('create', { hotelId: '1', request: {
+                        "email": "john@doe.com",
+                        "end": "2017-09-01T05:00:00.000Z",
+                        "firstname": "John",
+                        "lastname": "Doe",
+                        "reservationNumber": "reservation",
+                        "start": "2017-08-25T05:00:00.000Z",
+                        "status": "New"
+                    }
+                }).should.be.fulfilled;
+            })
+        })
+        describe('Update Reservation', function() {
+            beforeEach(function(){
+                let updateResponse = {
+                    "address": "string",
+                    "email": "string",
+                    "end": "2017-08-21T19:13:44.694Z",
+                    "firstname": "string",
+                    "id": 0,
+                    "language": "string",
+                    "lastname": "string",
+                    "lateCheckoutTime": "2017-08-21T19:13:44.694Z",
+                    "notes": "string",
+                    "phone": "string",
+                    "prefix": "string",
+                    "reservationNumber": "string",
+                    "roomNumber": "string",
+                    "start": "2017-08-21T19:13:44.694Z",
+                    "status": "New",
+                    "uuid": "string",
+                    "vip": "string"
+                }
+                nock('https://rest.aliceapp.com/staff/v1')
+                    .put('/hotels/1/reservations/123456?apikey=123456')
+                    .reply(200, updateResponse);
+            })
+            it('Should require a hotel ID', function() {
+                return alice.reservations('update', { 
+                    reservationId: '123456',
+                    request: {
+                        "email": "john@doe.com",
+                        "end": "2017-09-01T05:00:00.000Z",
+                        "firstname": "John",
+                        "lastname": "Doe",
+                        "reservationNumber": "reservation",
+                        "start": "2017-08-25T05:00:00.000Z",
+                        "status": "New"
+                        }
+                }).should.be.rejected;
+            })
+            it('Should require a reservation ID', function() {
+                return alice.reservations('update', {
+                    hotelId: '1',
+                    request: {
+                        "email": "john@doe.com",
+                        "end": "2017-09-01T05:00:00.000Z",
+                        "firstname": "John",
+                        "lastname": "Doe",
+                        "reservationNumber": "reservation",
+                        "start": "2017-08-25T05:00:00.000Z",
+                        "status": "New"
+                        }
+                }).should.be.rejected;
+            })
+            it('Should require a request', function() {
+                return alice.reservations('update', { hotelId: '1', reservationId: '123456' }).should.be.rejected;
+            })
+            it('Should create a reservation', function() {
+                return alice.reservations('update', { 
+                    hotelId: '1',
+                    reservationId: '123456',
+                    request: {
+                        "email": "john@doe.com",
+                        "end": "2017-09-01T05:00:00.000Z",
+                        "firstname": "John",
+                        "lastname": "Doe",
+                        "reservationNumber": "reservation",
+                        "start": "2017-08-25T05:00:00.000Z",
+                        "status": "New"
+                    }
+                }).should.be.fulfilled;
+            })
+        })
+        describe('Get reservations', function() {
+            beforeEach(function() {
+                const getResponse = [{
+                    "address": "string",
+                    "email": "string",
+                    "end": "2017-08-21T19:13:44.678Z",
+                    "firstname": "string",
+                    "id": 0,
+                    "language": "string",
+                    "lastname": "string",
+                    "lateCheckoutTime": "2017-08-21T19:13:44.678Z",
+                    "notes": "string",
+                    "phone": "string",
+                    "prefix": "string",
+                    "reservationNumber": "string",
+                    "roomNumber": "string",
+                    "start": "2017-08-21T19:13:44.678Z",
+                    "status": "New",
+                    "uuid": "string",
+                    "vip": "string"
+                }]
+                nock('https://rest.aliceapp.com/staff/v1')
+                    .get('/hotels/1/reservations?query=reservation&apikey=123456')
+                    .reply(200, getResponse);
+            })
+            it('Should require a hotel ID', function() {
+                return alice.reservations('get', { query: 'reservation' }).should.be.rejected;
+            })
+            it('Should require a query', function() {
+                return alice.reservations('get', { hotelId: '1' }).should.be.rejected;
+            })
+            it('Should get a reservation', function() {
+                return alice.reservations('get', { hotelId: '1', query: 'reservation'
+                }).should.be.fulfilled;
+            })
+        })
+    })
     describe('Testing Services', function() {
         describe('Get Services', function() {
             beforeEach(function() {
